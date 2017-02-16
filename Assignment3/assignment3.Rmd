@@ -1,0 +1,39 @@
+---
+title: "Assignment3"
+author: "Tek"
+date: "2017³â 2¿ù 16ÀÏ"
+output:
+  pdf_document:
+    fig_caption: yes
+    number_sections: no
+  html_document: default
+geometry: margin=0.5in
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, tidy.opts=list(width.cutoff=40))
+```
+
+```{r libraries, message=FALSE, warning=FALSE, error=FALSE, include=F}
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+packages <- c("tidyverse", "ggplot2", "pander", "gridExtra", "tidyr")
+ipak(packages)
+```
+
+```{r loaddata}
+loadfile=function(filenumber, i){
+ld=readxl::read_excel(paste0("File", filenumber,".xlsx"), sheet=i)
+names(ld)[1:2]<-c("id","type")
+return(ld)
+}
+One=lapply(1:4, function(i){loadfile("One", i)}) %>% do.call("list",.)
+View(One)
+# Two=lapply(1:4, function(i){loadfile("Two", i)}) %>% do.call("list",.)
+```
+
