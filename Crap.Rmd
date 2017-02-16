@@ -95,4 +95,32 @@ One.v2 <- One %>% do.call("bind_rows", .)
 Two.v2 <- Two %>% do.call("bind_rows", .) 
 
 Two.v2
-One.v2 %>% spread(key = id, value = c(Post, Pre))
+
+data <- full_join(One.v2, Two.v2, by = c("id", "Semester"))
+names(data)[c(2,3,5,6)] <- c("Post C1", "Pre C1", "Post C2", "Pre C2")
+
+
+#FISHY!
+leftover.indx1 <- anti_join(index1, index2, by = "id")
+
+leftover.indx2 <- anti_join(index2, index1, by = "id")
+
+leftover.indx1
+
+leftover.indx2
+
+
+
+index <- full_join(index2, index1, by = c("id","GENDER", "Characteristic"))
+
+data <- left_join(data, index, by = "id")
+
+#YUSSS
+names(data)
+ggplot(data = data, aes(x = `Pre C1`, y = `Post C1`)) + facet_wrap(~Semester)+geom_point(aes(colour=GENDER))
+
+
+data %>% gather(key = "type", value = "score", c(starts_with("Pre"),starts_with("Post"))) %>% separate(type, into = c("test", "measure")) %>% unique() %>% spread(key = "test", value = "score") %>% ggplot(aes(x = `Pre`, y = `Post`)) + facet_grid(measure ~ Semester)+geom_point(aes(colour=GENDER, shape = Characteristic))  
+
+ggplot(data = data, aes(x = `Pre C1`, y = `Post C1`)) + facet_wrap(~Semester)+geom_point(aes(colour=GENDER))
+```
