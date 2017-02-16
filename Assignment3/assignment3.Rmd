@@ -1,7 +1,7 @@
 ---
 title: "Assignment3"
-author: "Tek"
-date: "2017³â 2¿ù 16ÀÏ"
+author: "Aron Baker, Ashish Jain, Taikgun Song"
+date: "Due Feb 20, 2017"
 output:
   pdf_document:
     fig_caption: yes
@@ -35,5 +35,10 @@ return(ld)
 One=lapply(1:4, function(i){loadfile("One", i)}) %>% do.call("list",.)
 View(One)
 # Two=lapply(1:4, function(i){loadfile("Two", i)}) %>% do.call("list",.)
+```
+
+
+```{r}
+
 ```
 
