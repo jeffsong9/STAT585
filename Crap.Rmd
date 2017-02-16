@@ -1,0 +1,98 @@
+---
+title: "Assignment3"
+author: "Tek"
+date: "2017�� 2�� 16��"
+output:
+  pdf_document:
+    fig_caption: yes
+    number_sections: no
+  html_document: default
+geometry: margin=0.5in
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, tidy.opts=list(width.cutoff=40))
+```
+
+```{r libraries, message=FALSE, warning=FALSE, error=FALSE, include=F}
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+packages <- c("tidyverse", "ggplot2", "pander", "gridExtra", "tidyr")
+ipak(packages)
+```
+
+```{r loaddata}
+loadfile=function(filenumber, i){
+ld=readxl::read_excel(paste0("File", filenumber,".xlsx"), sheet=i)
+names(ld)[1:2]<-c("id","type")
+return(ld)
+}
+
+One=lapply(1:4, function(i){loadfile("One", i)}) %>% do.call("list",.)
+One[[1]]
+
+Two=lapply(1:4, function(i){loadfile("Two", i)}) %>% do.call("list",.)
+
+
+lapply(1:4, function(i) One[[i]] %>% select(id, GENDER, Characteristic)) %>% do.call("rbind",.) -> index1
+index1[complete.cases(index1),] ->index1
+
+
+lapply(1:4, function(i) Two[[i]] %>% select(id, GENDER, Characteristic)) %>% do.call("rbind",.) -> index2
+index2[complete.cases(index2),] ->index2
+
+
+for(i in 1:4){
+One[[i]] <- One[[i]] %>% select(id, type, Total)
+}
+
+for(i in 1:4){
+Two[[i]] <- Two[[i]] %>% select(id, type, Total)
+}
+
+for(i in 1:4){
+  One[[i]] <- One[[i]] %>% spread(key = type, value = Total)
+}
+
+for(i in 1:4){
+  Two[[i]] <- Two[[i]] %>% spread(key = type, value = Total)
+}
+
+for(i in 1:4){
+  names(Two[[i]])[2] <- "Post" 
+  names(Two[[i]])[3] <- "Pre"
+}
+
+for(i in 1:4){
+  names(One[[i]])[2] <- "Post" 
+  names(One[[i]])[3] <- "Pre"
+}
+
+Two[[1]]
+Semester <- c("F-11", "S-11", "F-12", "S-12")
+temp <- One
+for(i in 1:4){
+  One[[i]] <- One[[i]] %>% mutate(Semester = Semester[i])
+}
+
+for(i in 1:4){
+  Two[[i]] <- Two[[i]] %>% mutate(Semester = Semester[i])
+}
+
+One[[1]]
+FullOne <- One[[1]]
+Fulltwo <- One[[2]]
+
+One.v2 <- One %>% do.call("bind_rows", .) 
+
+
+Two.v2 <- Two %>% do.call("bind_rows", .) 
+
+Two.v2
+One.v2 %>% spread(key = id, value = c(Post, Pre))
