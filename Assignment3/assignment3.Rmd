@@ -35,10 +35,12 @@ return(ld)
 One=lapply(1:4, function(i){loadfile("One", i)}) %>% do.call("list",.)
 View(One)
 # Two=lapply(1:4, function(i){loadfile("Two", i)}) %>% do.call("list",.)
+names(One[[1]])
 ```
 
 
 ```{r}
-
+lapply(1:4, function(i) One[[i]] %>% select(id, GENDER, Characteristic, `Treatment Part 1`, `Treatment Part 2 `)) %>% do.call("rbind",.) -> index
+index[complete.cases(index),] ->index
 ```
 
